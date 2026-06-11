@@ -3,7 +3,7 @@
 // the page content (the same easing family used for the gallery drag).
 
 import Lenis from 'lenis';
-import { createArtwork } from './imageFactory.js';
+import { createArtwork, createPhotoCard, loadImage } from './imageFactory.js';
 
 const gsap = window.gsap;
 
@@ -72,17 +72,22 @@ export class Detail {
     });
   }
 
-  show(project, fromScreen) {
+  show(project, photoUrl) {
     if (this.open) return;
     this.open = true;
     this.root.classList.add('is-active');
     this.root.style.pointerEvents = 'auto';
 
-    // paint the larger artwork
-    const art = createArtwork(project, { width: 1024, height: 1280 });
+    // paint the larger card image (real photo when available, else procedural)
+    const W = 900, H = 1125;
+    this.canvas.width = W; this.canvas.height = H;
     const cctx = this.canvas.getContext('2d');
-    this.canvas.width = art.width; this.canvas.height = art.height;
-    cctx.drawImage(art, 0, 0);
+    cctx.drawImage(createArtwork(project, { width: W, height: H }), 0, 0); // immediate fallback
+    if (photoUrl) {
+      loadImage(photoUrl)
+        .then((img) => { if (this.open) cctx.drawImage(createPhotoCard(project, img, { width: W, height: H }), 0, 0); })
+        .catch(() => {});
+    }
 
     const accent = project.palette.accents[0];
     this.titleEl.textContent = project.title;
@@ -118,7 +123,6 @@ export class Detail {
     });
     this._raf = (t) => { if (this.lenis) { this.lenis.raf(t); requestAnimationFrame(this._raf); } };
     requestAnimationFrame(this._raf);
-    void fromScreen;
   }
 
   close() {

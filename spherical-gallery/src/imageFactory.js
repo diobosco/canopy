@@ -189,3 +189,70 @@ export function createArtwork(project, { width = 512, height = 640 } = {}) {
 
   return canvas;
 }
+
+// Draw the editorial caption (index + category + title over a bottom scrim).
+function drawCaption(ctx, project, width, height) {
+  const scrim = ctx.createLinearGradient(0, height * 0.55, 0, height);
+  scrim.addColorStop(0, 'rgba(0,0,0,0)');
+  scrim.addColorStop(1, 'rgba(0,0,0,0.8)');
+  ctx.fillStyle = scrim;
+  ctx.fillRect(0, height * 0.55, width, height * 0.45);
+
+  const pad = width * 0.07;
+  ctx.textBaseline = 'alphabetic';
+  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  ctx.font = `500 ${Math.round(width * 0.03)}px "Helvetica Neue", Arial, sans-serif`;
+  if ('letterSpacing' in ctx) ctx.letterSpacing = '3px';
+  const idx = String(project.index + 1).padStart(2, '0');
+  ctx.fillText(`${idx} — ${project.category.toUpperCase()}`, pad, height - pad * 2.1);
+  if ('letterSpacing' in ctx) ctx.letterSpacing = '0px';
+  ctx.fillStyle = '#ffffff';
+  ctx.font = `600 ${Math.round(width * 0.082)}px "Helvetica Neue", Arial, sans-serif`;
+  ctx.fillText(project.title, pad, height - pad * 1.0);
+}
+
+// Build a card canvas from a loaded photograph: cover-fit the image, add a
+// gentle accent wash + vignette, then the editorial caption.
+export function createPhotoCard(project, img, { width = 512, height = 640 } = {}) {
+  const canvas = document.createElement('canvas');
+  canvas.width = width; canvas.height = height;
+  const ctx = canvas.getContext('2d');
+
+  // cover-fit (crop to fill the portrait card)
+  const ir = img.width / img.height, cr = width / height;
+  let dw, dh, dx, dy;
+  if (ir > cr) { dh = height; dw = height * ir; dx = (width - dw) / 2; dy = 0; }
+  else { dw = width; dh = width / ir; dx = 0; dy = (height - dh) / 2; }
+  ctx.drawImage(img, dx, dy, dw, dh);
+
+  // very light accent wash to tie the photos into the palette without dulling them
+  const [rr, gg, bb] = hexToRgb(project.palette.accents[0]);
+  ctx.globalCompositeOperation = 'soft-light';
+  const wash = ctx.createLinearGradient(0, 0, width, height);
+  wash.addColorStop(0, `rgba(${rr},${gg},${bb},0.2)`);
+  wash.addColorStop(1, 'rgba(0,0,0,0.1)');
+  ctx.fillStyle = wash;
+  ctx.fillRect(0, 0, width, height);
+  ctx.globalCompositeOperation = 'source-over';
+
+  // gentle vignette
+  const vg = ctx.createRadialGradient(width / 2, height / 2, width * 0.3, width / 2, height / 2, width * 0.9);
+  vg.addColorStop(0, 'rgba(0,0,0,0)');
+  vg.addColorStop(1, 'rgba(0,0,0,0.26)');
+  ctx.fillStyle = vg;
+  ctx.fillRect(0, 0, width, height);
+
+  drawCaption(ctx, project, width, height);
+  return canvas;
+}
+
+// Load an image element from a URL (resolves once decoded).
+export function loadImage(url) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = url;
+  });
+}

@@ -23,7 +23,7 @@ const gallery = new Gallery({
   canvas,
   onSelect: (project, mesh) => {
     gallery.setFrozen(true);
-    detail.show(project, gallery.getCardScreenPosition(mesh));
+    detail.show(project, mesh.userData.photoUrl);
   },
   onHoverChange: (project) => {
     if (project) {
@@ -36,9 +36,7 @@ const gallery = new Gallery({
   },
 });
 
-// reflect the real card count in the UI
 const countEl = document.getElementById('count');
-if (countEl) countEl.textContent = `${gallery.cards.length} projects`;
 
 // expose for devtools inspection / debugging
 window.__gallery = gallery;
@@ -54,13 +52,16 @@ window.addEventListener('load', kickoff);
 if (document.readyState === 'complete') kickoff();
 
 let booted = false;
-function kickoff() {
+async function kickoff() {
   if (booted) return;
   booted = true;
+  // preload the photographs and build the cards before revealing
+  await gallery.load();
+  if (countEl) countEl.textContent = `${gallery.cards.length} projects`;
+
   gsap.to(loader, {
     autoAlpha: 0,
     duration: 0.8,
-    delay: 0.3,
     onComplete: () => loader.remove(),
   });
   gallery.intro();

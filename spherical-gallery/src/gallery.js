@@ -5,7 +5,8 @@
 
 import * as THREE from 'three';
 import { PROJECTS } from './data.js';
-import { createArtwork } from './imageFactory.js';
+import { PHOTOS } from './photos.js';
+import { createArtwork, createPhotoCard, loadImage } from './imageFactory.js';
 
 const gsap = window.gsap;
 
@@ -106,14 +107,21 @@ export class Gallery {
     this.interactive = false;   // gates hover/click until intro completes
     this.frozen = false;        // pauses input while a detail page is open
 
-    this._buildCards();
+    this._buildStars();
     this._bindEvents();
     this.resize();
     this._clock = new THREE.Clock();
     this.renderer.setAnimationLoop(() => this._tick());
   }
 
-  _buildCards() {
+  // Preload the photographs, then build the cards. Returns when ready.
+  async load() {
+    const results = await Promise.allSettled(PHOTOS.map(loadImage));
+    const imgs = results.map((r) => (r.status === 'fulfilled' ? r.value : null));
+    this._buildCards(imgs);
+  }
+
+  _buildCards(imgs) {
     // Spherical gallery: latitude rings, each with a column count proportional to
     // cos(latitude). This keeps every cell roughly the same angular size, so cards
     // stay evenly spaced and never overlap as longitude lines converge at the poles.
@@ -135,10 +143,14 @@ export class Gallery {
 
       for (let col = 0; col < cols; col++) {
         const project = PROJECTS[p % PROJECTS.length];
+        const photoUrl = PHOTOS[p % PHOTOS.length];
+        const img = imgs[p % imgs.length];
         p++;
         const theta = (col / cols) * Math.PI * 2 + rowOffset;
 
-        const tex = new THREE.CanvasTexture(createArtwork(project));
+        // real photo when available, procedural artwork as a fallback
+        const cardCanvas = img ? createPhotoCard(project, img) : createArtwork(project);
+        const tex = new THREE.CanvasTexture(cardCanvas);
         tex.colorSpace = THREE.SRGBColorSpace;
         tex.anisotropy = this.renderer.capabilities.getMaxAnisotropy();
         tex.minFilter = THREE.LinearMipmapLinearFilter;
@@ -170,12 +182,14 @@ export class Gallery {
         mesh.lookAt(0, 0, 0);    // face the centre (the camera)
         mesh.renderOrder = 1;
 
-        mesh.userData = { project, material, basePos: mesh.position.clone() };
+        mesh.userData = { project, material, photoUrl, basePos: mesh.position.clone() };
         this.world.add(mesh);
         this.cards.push(mesh);
       }
     }
+  }
 
+  _buildStars() {
     // faint starfield for depth behind the cards
     const starGeo = new THREE.BufferGeometry();
     const N = 600;

@@ -11,6 +11,7 @@ const root = path.resolve(fileURLToPath(new URL('..', import.meta.url)));
 const MIME = {
   '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript',
   '.css': 'text/css', '.json': 'application/json', '.svg': 'image/svg+xml',
+  '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp',
 };
 
 const server = http.createServer((req, res) => {
@@ -47,7 +48,7 @@ await page.goto('http://localhost:8848/index.html', { waitUntil: 'load' });
 // headless throttles rAF -> gsap lag-smoothing stalls time; disable it so the
 // test runs at real-time like a visible 60fps browser would.
 await page.evaluate(() => window.gsap && window.gsap.ticker.lagSmoothing(0));
-await page.waitForTimeout(4000); // let intro play
+await page.waitForTimeout(5500); // let photos load + intro play
 
 const loaderState = await page.evaluate(() => {
   const l = document.getElementById('loader');
