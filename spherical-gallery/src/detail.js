@@ -36,8 +36,8 @@ export class Detail {
             <span class="detail__label">Overview</span>
             <p>This is a basic template page. The focus of this build is the spherical
                gallery itself — the orbiting wall of cards you tap to arrive here.</p>
-            <p>The same procedural artwork that lives on the card is regenerated here at
-               a larger scale, keeping the transition feeling continuous.</p>
+            <p>The same photograph that lives on the card is shown here at a larger
+               scale, keeping the transition feeling continuous.</p>
           </div>
           <div class="detail__col">
             <span class="detail__label">Credits</span>
