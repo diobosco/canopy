@@ -88,6 +88,11 @@ export class Gallery {
     this.raycaster = new THREE.Raycaster();
     this.pointer = new THREE.Vector2(999, 999);
 
+    // scratch objects for the hover "level up" orientation
+    this._tmpObj = new THREE.Object3D();
+    this._tmpV = new THREE.Vector3();
+    this._invWorldQ = new THREE.Quaternion();
+
     // rotation state (eased)
     this.targetYaw = 0;
     this.targetPitch = 0;
@@ -182,7 +187,11 @@ export class Gallery {
         mesh.lookAt(0, 0, 0);    // face the centre (the camera)
         mesh.renderOrder = 1;
 
-        mesh.userData = { project, material, photoUrl, basePos: mesh.position.clone() };
+        mesh.userData = {
+          project, material, photoUrl,
+          basePos: mesh.position.clone(),
+          baseQuat: mesh.quaternion.clone(), // rest orientation on the sphere
+        };
         this.world.add(mesh);
         this.cards.push(mesh);
       }
@@ -360,7 +369,31 @@ export class Gallery {
       this._setHover(null);
     }
 
+    this._updateCardFocus(dt);
     this.renderer.render(this.scene, this.camera);
+  }
+
+  // Ease the hovered card to face the viewer flat & upright (cancelling the
+  // sphere's curvature roll); ease every other card back to its sphere pose.
+  _updateCardFocus(dt) {
+    const wq = this.world.quaternion;
+    this._invWorldQ.copy(wq).invert();
+    const k = 1 - Math.pow(0.0007, dt); // smoothing toward target per frame
+
+    for (const card of this.cards) {
+      if (card === this.hovered) {
+        // world-space position of the card, then look back at the eye (origin)
+        this._tmpV.copy(card.userData.basePos).applyQuaternion(wq);
+        this._tmpObj.position.copy(this._tmpV);
+        this._tmpObj.up.set(0, 1, 0);
+        this._tmpObj.lookAt(0, 0, 0);
+        // convert that world orientation into the rotating group's local frame
+        this._tmpObj.quaternion.premultiply(this._invWorldQ);
+        card.quaternion.slerp(this._tmpObj.quaternion, k);
+      } else if (!card.quaternion.equals(card.userData.baseQuat)) {
+        card.quaternion.slerp(card.userData.baseQuat, k);
+      }
+    }
   }
 
   resize() {
