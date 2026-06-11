@@ -1,3 +1,5 @@
 node_modules/
 test/shots/
+test/video/
 package-lock.json
+*.webm
