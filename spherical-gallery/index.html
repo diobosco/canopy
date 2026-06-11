@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Spherical Gallery — Three.js × GSAP</title>
+  <meta name="description" content="An inside-out spherical gallery built with Three.js and GSAP. Drag to explore." />
+  <link rel="stylesheet" href="./styles.css" />
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "./vendor/three.module.js",
+        "lenis": "./vendor/lenis.mjs"
+      }
+    }
+  </script>
+  <!-- GSAP (UMD global) -->
+  <script src="./vendor/gsap.min.js"></script>
+</head>
+<body>
+  <canvas id="scene"></canvas>
+
+  <!-- top bar -->
+  <header class="topbar">
+    <div class="topbar__brand">CANOPY<span>°</span></div>
+    <nav class="topbar__nav">
+      <span>Index</span>
+      <span class="topbar__count" id="count">56 projects</span>
+    </nav>
+  </header>
+
+  <!-- floating hover caption that follows the cursor -->
+  <div id="caption" class="caption">
+    <div class="caption__title"></div>
+    <div class="caption__meta"></div>
+    <div class="caption__cta">View project →</div>
+  </div>
+
+  <!-- drag hint -->
+  <div id="hint" class="hint">
+    <span class="hint__dot"></span> Click &amp; drag to explore — tap a card to open
+  </div>
+
+  <!-- detail page (template) -->
+  <div id="detail" class="detail"></div>
+
+  <!-- loader -->
+  <div id="loader" class="loader">
+    <div class="loader__inner">
+      <div class="loader__ring"></div>
+      <div class="loader__label">Entering the sphere</div>
+    </div>
+  </div>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>

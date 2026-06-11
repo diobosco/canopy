@@ -1,0 +1,17 @@
+{
+  "name": "spherical-gallery",
+  "version": "1.0.0",
+  "description": "Inside-out spherical gallery built with Three.js and GSAP, with Lenis-style eased orbit drag.",
+  "type": "module",
+  "scripts": {
+    "start": "http-server -p 8848 -c-1",
+    "verify": "node test/drive.mjs"
+  },
+  "keywords": ["three.js", "gsap", "lenis", "webgl", "gallery"],
+  "license": "MIT",
+  "dependencies": {
+    "gsap": "^3.12.5",
+    "lenis": "^1.1.13",
+    "three": "^0.160.0"
+  }
+}
