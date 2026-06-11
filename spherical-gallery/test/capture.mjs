@@ -13,7 +13,7 @@ const { chromium } = pw;
 const FFMPEG = '/tmp/ff/node_modules/ffmpeg-static/ffmpeg';
 
 const root = path.resolve(fileURLToPath(new URL('..', import.meta.url)));
-const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.css': 'text/css', '.json': 'application/json' };
+const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp' };
 const server = http.createServer((req, res) => {
   let p = decodeURIComponent(req.url.split('?')[0]);
   if (p === '/') p = '/index.html';
@@ -102,5 +102,5 @@ console.log('captured frames:', count);
 const out = path.join(root, 'spherical-gallery-demo.mp4');
 execFileSync(FFMPEG, ['-y', '-framerate', '15', '-i', path.join(frames, 'f%04d.jpg'),
   '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-movflags', '+faststart',
-  '-vf', `scale=${W}:${H}`, '-crf', '23', '-preset', 'veryfast', out], { stdio: 'ignore' });
+  '-vf', 'scale=trunc(iw/2)*2:trunc(ih/2)*2', '-crf', '23', '-preset', 'veryfast', out], { stdio: 'ignore' });
 console.log('VIDEO:', out, (fs.statSync(out).size / 1e6).toFixed(2) + 'MB');
