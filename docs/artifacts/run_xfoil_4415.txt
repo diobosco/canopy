@@ -1,0 +1,20 @@
+# Reproduce the section polars in real XFOIL (run on a build that is NOT FPE-trapped).
+# Usage:  xfoil < run_xfoil.txt
+PLOP
+G
+
+NACA 4415
+PANE
+OPER
+VISC 1370000
+MACH 0.12
+ITER 250
+PACC
+polar_NACA4415_Re1370k.txt
+
+ASEQ 0 16 0.5
+INIT
+ASEQ -0.5 -6 -0.5
+PACC
+
+QUIT
