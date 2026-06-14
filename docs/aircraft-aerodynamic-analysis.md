@@ -6,6 +6,26 @@
 
 ---
 
+## Executive summary
+
+| Question | Answer (first-order) |
+|---|---|
+| **Baseline aerodynamics** (4 m span, 2 m² wing, AR 8) | C_D = 0.029 + 0.050·C_L²; **(L/D)max ≈ 13.1**; stall 65 km/h @500 m |
+| **Spec consistency** | Self-consistent: 600 km ferry = cruising V_nom 150 km/h; 10 h endurance at low speed; V_min 81 km/h ≈ 1.3·V_stall; V_ne is a structural limit |
+| **Max MTOW** | 50 kg is structure/wing-loading-limited, not power-limited (T/W ≈ 0.52); overload to ~60 kg flyable at reduced g-margin |
+| **Best airfoil** | **NACA 2415** (15 % thick = cheap deep spar, low pitching moment, low cruise drag); XFOIL-validated. Add flaps for low speed, not more camber |
+| **Half-size wing, 4 m span (AR 16)** | Keeps (L/D)max ≈ 13; ~18 % more fast-cruise range; stall rises to 87 km/h |
+| **Short wing 2 m × 0.5 m (AR 4) — current** | Low AR ⇒ **(L/D)max ≈ 7.3**; max speed **power-limited ~205 km/h** so **V_ne 240 km/h is unreachable**; cheapest/strongest structure |
+| **Current stall speed (1 m² wing, 50 kg)** | **≈ 88 km/h @500 m, ≈ 105 km/h @4000 m** (clean); ~75 km/h with flaps |
+| **500 km mission (AR 4 wing)** | 130 km/h econ (12 L) … 178 km/h flat-out (15 L) |
+| **Propeller for 160 km/h** | 28×10 can't do it (pitch-limited ~107 km/h). **Optimum ≈ 28×24 @ ~5000 rpm**, η_p ≈ 0.88, ~3.4 L/h, **~700 km range** |
+
+## Contents
+
+1. Input parameters · 2. Method & assumptions · 3. Drag polar & key figures · 4. Requested tables (drag / fuel / AoA vs speed) · 5. Max MTOW · 6. Performance summary · 7. Caveats · 8. Cost-effective structure · 9. NACA airfoil optimization · 10. NACA 2415 vs 4415 head-to-head · 11. XFOIL-grade validation · 12. Half-size wing scenario · 13. Recalculation: 2 m span (AR 4), V_ne 240 · 14. Propeller pitch & RPM optimization
+
+---
+
 ## 1. Input parameters (as supplied)
 
 | Parameter | Value | Parameter | Value |
