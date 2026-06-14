@@ -306,3 +306,93 @@ The request asked, *if* a solution is proposed, to optimise for **structural cos
 5. **Don't over-build for power.** Since the aircraft is not thrust-limited, resist the temptation to up-engine; spend the weight/cost budget on the spar and wing area instead.
 
 *Net: the most cost-effective structure keeps the cheap constant-chord wing and tube fuselage, sizes a single tube spar to the +4.8 g case, adds span/area to lift the MTOW limit, and recovers drag with a light cowl — improving range, field length and payload without new propulsion.*
+
+---
+
+## 9. NACA airfoil optimization
+
+This section replaces the placeholder "NACA 25112" with a section chosen *for this airframe and mission*, and re-runs the performance with the winner. (Section data are handbook values — Abbott & von Doenhoff / Theory of Wing Sections — interpolated to the wing's operating Reynolds number **Re ≈ 1.37×10⁶** at cruise; treat as engineering estimates.)
+
+### 9.1 Design drivers (what the airfoil must satisfy here)
+
+| Driver | This aircraft | Implication for the section |
+|---|---|---|
+| Reynolds number | ~0.8–1.4×10⁶ (chord 0.5 m) | avoid thin laminar sections that are Re-sensitive; favour forgiving 4-digit shapes |
+| Operating C_L | cruise C_L ≈ 0.17–0.26 (fast), best-range C_L ≈ 0.78 | low drag must extend down to *low* C_L (it cruises fast / lightly loaded aerodynamically) |
+| Wing loading | high (25 kg/m²) → stall speed is the pain point | **high C_Lmax** is the single most valuable property |
+| Structure / cost | constant-chord wing, single tube spar, brief says *optimise structural cost* | **thicker = deeper, lighter, cheaper spar**; **low \|C_m\| = lighter tail & less wing torsion** |
+| Handling (50 kg UAV) | docile recovery wanted | **gentle trailing-edge stall**, not abrupt leading-edge stall |
+| Build cost | hand/CNC-cut foam or ribs | well-documented 4-digit ordinates; no exotic laminar tooling |
+
+### 9.2 Candidate comparison (at MTOW, Re ≈ 1.4×10⁶)
+
+| Section | t/c | C_D0 (a/c) | (L/D)max | C_Lmax (3-D) | V_stall 500 m | V_stall 4000 m | C_m,ac | Stall type | Verdict |
+|---|---:|---:|---:|---:|---:|---:|---:|:--:|---|
+| NACA 2412 *(assumed baseline)* | 12% | 0.0293 | 13.10 | 1.40 | 62 km/h | 74 km/h | −0.05 | docile | reference |
+| **NACA 2415** ✅ | 15% | 0.0302 | 12.90 | 1.44 | 62 km/h | 73 km/h | −0.05 | docile | **best blend (recommended)** |
+| NACA 4412 | 12% | 0.0301 | 12.92 | 1.49 | 60 km/h | 72 km/h | −0.09 | docile | high lift, thin spar |
+| NACA 4415 | 15% | 0.0310 | 12.73 | 1.49 | 60 km/h | 72 km/h | −0.09 | docile | high-lift alternative |
+| NACA 23015 | 15% | 0.0304 | 12.86 | 1.55 | 59 km/h | 71 km/h | −0.01 | **abrupt LE** | rejected (unsafe stall) |
+| NACA 4418 | 18% | 0.0327 | 12.39 | 1.46 | 61 km/h | 73 km/h | −0.09 | docile | cheapest spar, draggy |
+
+### 9.3 Recommendation — **NACA 2415** (with **NACA 4415** as the high-lift alternative)
+
+**Why 2415 is the cost-effective optimum:**
+
+1. **Thickness 12 % → 15 % is the real structural win.** A 15 % section makes the spar ~25 % deeper. For a given strength the spar-cap area scales roughly with 1/depth, so caps get **~20 % lighter/cheaper** (or much stronger for the same mass) — directly meeting the "optimise structural cost" brief. The cost is only **~3 % in (L/D)max** (13.1 → 12.9) and **+0.0009 in C_D0**.
+2. **Low pitching moment (C_m ≈ −0.05).** Half the nose-down moment of the 4-series 44xx sections ⇒ **lower wing torsion** (lighter D-box/skins) and **less tail download / trim drag** (smaller, lighter tail). Another structural-cost win that 4415/4412 give up.
+3. **Low drag at the actual cruise C_L.** With only 2 % camber its drag bucket sits at low C_L, matching the fast/lightly-loaded cruise — so the **600 km ferry range and 10 h endurance are preserved** (recomputed V_nom burn still 3.60 L/h, 0.0240 L/km).
+4. **Docile trailing-edge stall** and trivially documented ordinates → safe and cheap to build on the constant-chord wing.
+
+**Pick NACA 4415 instead only if** clean-configuration low-speed margin matters more than cruise drag (it adds ~0.05 C_Lmax and a thicker spar, but ~3 % more cruise drag and ~80 % more pitching moment). **NACA 23015 is rejected** despite the highest C_Lmax — its abrupt leading-edge stall is unsafe for this wing without stall strips/washout.
+
+### 9.4 The bigger lever: flaps on the constant-chord wing
+
+Airfoil choice alone moves stall speed only a few km/h — the high wing loading dominates. The **cheap, high-payoff fix is simple flaps**, which the rectangular wing makes almost free (one constant-section flap, no taper jig):
+
+| Configuration | C_Lmax | Stall @500 m | Safe V_min (1.3·V_s) |
+|---|---:|---:|---:|
+| 2415, clean | 1.44 | 61 km/h | **80 km/h** (= the spec's 81 km/h ✔) |
+| 2415 + plain flap | ~1.7 | 57 km/h | 74 km/h |
+| 2415 + simple split/slotted flap | ~1.9 | 54 km/h | 70 km/h |
+
+Flaps would cut take-off/landing distance, lower V_min, and **raise the usable Max-MTOW** (stall-limited) — for very little structural cost.
+
+### 9.5 Performance re-run with NACA 2415 (MTOW 50 kg)
+
+C_D0 = 0.0302, k = 0.0497, drag polar **C_D = 0.0302 + 0.0497·C_L²**, (L/D)max = **12.9** at C_L = 0.78, C_Lmax = 1.44. Fuel model re-anchored to 3.6 L/h at V_nom (η_overall = 0.089).
+
+**500 m**
+| V (m/s) | V (km/h) | C_L | C_D | L/D | Drag (N) | AoA (deg) | P_req (kW) | Fuel (L/h) | Fuel (L/km) |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 22.5 | 81 | 0.830 | 0.0644 | 12.88 | 38.1 | 7.93 | 0.857 | 1.10 | 0.0136 |
+| 25.0 | 90 | 0.672 | 0.0527 | 12.76 | 38.4 | 6.04 | 0.961 | 1.24 | 0.0137 |
+| 27.5 | 99 | 0.555 | 0.0455 | 12.20 | 40.2 | 4.65 | 1.106 | 1.42 | 0.0144 |
+| 30.0 | 108 | 0.467 | 0.0410 | 11.37 | 43.1 | 3.59 | 1.293 | 1.67 | 0.0154 |
+| 32.5 | 117 | 0.398 | 0.0381 | 10.45 | 46.9 | 2.76 | 1.525 | 1.96 | 0.0168 |
+| 35.0 | 126 | 0.343 | 0.0360 | 9.51 | 51.5 | 2.10 | 1.804 | 2.32 | 0.0184 |
+| 37.5 | 135 | 0.299 | 0.0346 | 8.62 | 56.9 | 1.58 | 2.132 | 2.75 | 0.0203 |
+| 40.0 | 144 | 0.263 | 0.0336 | 7.81 | 62.8 | 1.14 | 2.512 | 3.23 | 0.0225 |
+| 42.5 | 153 | 0.233 | 0.0329 | 7.07 | 69.3 | 0.78 | 2.947 | 3.79 | 0.0248 |
+| 45.0 | 162 | 0.207 | 0.0323 | 6.41 | 76.4 | 0.48 | 3.440 | 4.43 | 0.0273 |
+| 47.5 | 171 | 0.186 | 0.0319 | 5.83 | 84.1 | 0.23 | 3.994 | 5.14 | 0.0301 |
+| 50.0 | 180 | 0.168 | 0.0316 | 5.32 | 92.2 | 0.01 | 4.611 | 5.94 | 0.0330 |
+
+**4000 m**
+| V (m/s) | V (km/h) | C_L | C_D | L/D | Drag (N) | AoA (deg) | P_req (kW) | Fuel (L/h) | Fuel (L/km) |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 22.5 | 81 | 1.182 | 0.0997 | 11.86 | 41.4 | 12.15 | 0.931 | 1.20 | 0.0148 |
+| 25.0 | 90 | 0.958 | 0.0758 | 12.63 | 38.8 | 9.46 | 0.970 | 1.25 | 0.0139 |
+| 27.5 | 99 | 0.792 | 0.0614 | 12.90 | 38.0 | 7.47 | 1.045 | 1.35 | 0.0136 |
+| 30.0 | 108 | 0.665 | 0.0522 | 12.74 | 38.5 | 5.96 | 1.155 | 1.49 | 0.0138 |
+| 32.5 | 117 | 0.567 | 0.0462 | 12.27 | 40.0 | 4.78 | 1.298 | 1.67 | 0.0143 |
+| 35.0 | 126 | 0.489 | 0.0421 | 11.61 | 42.2 | 3.85 | 1.478 | 1.90 | 0.0151 |
+| 37.5 | 135 | 0.426 | 0.0392 | 10.86 | 45.2 | 3.09 | 1.694 | 2.18 | 0.0162 |
+| 40.0 | 144 | 0.374 | 0.0372 | 10.07 | 48.7 | 2.48 | 1.948 | 2.51 | 0.0174 |
+| 42.5 | 153 | 0.331 | 0.0357 | 9.29 | 52.8 | 1.97 | 2.242 | 2.89 | 0.0189 |
+| 45.0 | 162 | 0.296 | 0.0345 | 8.56 | 57.3 | 1.54 | 2.579 | 3.32 | 0.0205 |
+| 47.5 | 171 | 0.265 | 0.0337 | 7.87 | 62.3 | 1.18 | 2.959 | 3.81 | 0.0223 |
+| 50.0 | 180 | 0.239 | 0.0331 | 7.24 | 67.7 | 0.87 | 3.384 | 4.36 | 0.0242 |
+
+
+**Net effect vs the placeholder section:** essentially unchanged cruise/range performance (≤3 % on L/D and fuel), a meaningfully **cheaper and lighter wing structure** (deeper spar, lower torsion, smaller tail), and a clear, low-cost upgrade path (flaps) to attack the one real weakness — the high stall speed driven by wing loading.
