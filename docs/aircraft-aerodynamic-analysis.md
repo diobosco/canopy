@@ -686,3 +686,74 @@ Raising the structural V_ne to 240 km/h does **not** make the aircraft faster: t
 | **500 km mission** | ✔ Achievable: ~130 km/h for economy (12 L) up to ~178 km/h flat-out (15 L). |
 
 **Bottom line:** the short-span wing is the *cheapest and strongest structure* and easily flies 500 km, but it is the *least aerodynamically efficient* option and gives **no real top-speed benefit** — the engine, not the airframe, caps speed at ~205 km/h, so raising V_ne to 240 km/h buys nothing without more power. If you want both speed *and* range, keep aspect ratio high (long span); if you want a cheap, rugged, fast-enough 500 km truck, this wing works.
+
+---
+
+## 14. Propeller pitch & engine RPM optimization for 160 km/h cruise (best range)
+
+**Goal:** choose propeller pitch and engine RPM that fly 160 km/h at minimum fuel (best range), for the current 2 m-span (AR 4) aircraft. Diameter is kept at 28 in (0.711 m). All values at 500 m.
+
+### 14.1 Cruise requirement
+
+- Speed V = 160 km/h = **44.44 m/s**; drag (thrust required) **T = 75.6 N** (§13); thrust power P_t = T·V = **3.36 kW**.
+- Disk area A = πD²/4 = 0.397 m².
+
+### 14.2 Why the existing 28×10 prop cannot do it
+
+A fixed prop's theoretical (zero-slip) speed is *pitch × rpm*. The **28×10** at redline 7000 rpm reaches only:
+`10 in × 0.0254 × (7000/60) = 29.6 m/s = 107 km/h.`
+At 160 km/h the 10-inch prop is past its pitch — it produces little or negative thrust (windmills). **The 28×10 is a climb prop; cruising 160 km/h requires far more pitch.** This is the root cause, not engine power alone.
+
+### 14.3 Method (momentum + blade-element)
+
+1. **Induced (momentum) efficiency** — fixed by thrust, speed, disk area:
+   `η_i = 2 / (1 + √(1 + T/(½ρAV²))) = 2/(1+√1.165) = 0.962.`
+2. **Blade-element at the 0.75 R station** (r = 0.267 m), for engine speed n (rev/s), Ω = 2πn:
+   - Inflow/helix angle `φ = atan(V / (Ω r))`; relative wind `W = V / sin φ`.
+   - Required section lift `C_l = T / (B·½ρW²·c·Δr·cos φ)` (B = 2 blades, blade chord c ≈ 0.040 m, Δr ≈ 0.5 R).
+   - Section drag `C_d = 0.009 + 0.015 C_l²`; glide angle `γ = atan(C_d/C_l)`.
+   - **Blade efficiency** `η_blade = tan φ / tan(φ+γ)`  →  **propeller efficiency `η_p = η_i · η_blade`.**
+   - Blade angle `β = φ + α(C_l)`; **geometric pitch** `P = 2π r · tan β` (reported in inches).
+3. **Fuel** = shaft power × specific consumption: `P_shaft = P_t/η_p`; fuel flow uses the manufacturer-calibrated thermal efficiency (η_th ≈ 0.129, ≈645 g/kWh) modulated by a 2-stroke BSFC bowl (minimum ≈5300 rpm). Range = 15 L / (fuel-per-km).
+
+Lowering rpm coarsens pitch and *raises* η_p, but the engine's BSFC worsens away from its bowl and pitch is capped at P/D ≈ 1.0 (≈28 in) — so a **coupled optimum** exists.
+
+### 14.4 Optimization result (coupled prop + engine)
+
+| Engine RPM | J | blade C_l | C_l/C_d | η_p | P_shaft (kW) | Pitch (in) | Fuel (L/h) | Range 15 L (km) |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 4000 | 0.94 | 0.68 | 42.7 | 0.900 | 3.73 | 32.5 (P/D 1.16 ✗) | 3.55 | 677 |
+| 4500 | 0.83 | 0.55 | 40.6 | 0.891 | 3.77 | 27.6 | 3.45 | 695 |
+| **4750** | 0.79 | 0.50 | 39.0 | 0.886 | 3.79 | **26** | **3.43** | **699** |
+| **5000** | 0.75 | 0.45 | 37.3 | 0.880 | 3.82 | **24** | **3.43** | **699** |
+| 5250 | 0.71 | 0.41 | 35.5 | 0.873 | 3.85 | 22 | 3.45 | 696 |
+| 5500 | 0.68 | 0.37 | 33.7 | 0.865 | 3.89 | 21 | 3.49 | 689 |
+| 6000 | 0.63 | 0.32 | 30.1 | 0.847 | 3.97 | 19 | 3.61 | 664 |
+| 6500 | 0.58 | 0.27 | 26.8 | 0.827 | 4.06 | 17 | 3.83 | 627 |
+
+The fuel curve is flat-bottomed from ~4500–5250 rpm. **Optimum: ≈ 28 × 24 to 28 × 26 prop at ≈ 4750–5000 rpm.**
+
+### 14.5 Recommended cruise setting
+
+| Parameter | Value |
+|---|---|
+| **Propeller** | **28 × 24** (P/D ≈ 0.85) — or 28 × 26 at slightly lower rpm |
+| **Engine speed** | **≈ 5000 rpm** (4750–5000 band) |
+| Advance ratio J | ≈ 0.75–0.79 (classic cruise-prop sweet spot) |
+| Propeller efficiency η_p | **≈ 0.88** (vs ~0.70 for a mismatched prop) |
+| Blade C_l at 0.75 R | ≈ 0.45–0.50 (efficient, good stall margin) |
+| Shaft power needed | **≈ 3.8 kW** — only ~45 % of the engine's ~8.8 kW, so it cruises at part throttle (low wear, good BSFC) |
+| **Fuel flow** | **≈ 3.4 L/h (0.0215 L/km)** |
+| **Range on 15 L** | **≈ 700 km** (500 km uses ~10.7 L in 3.1 h) |
+
+**Gain vs a mismatched/generic prop (η_p ≈ 0.70):** fuel **−20 %**, range **+25 %** (558 → ~700 km) at 160 km/h — purely from correct pitch and rpm.
+
+### 14.6 Important trade-off: cruise prop vs take-off
+
+The 28 × 24 cruise prop is **deeply stalled at low speed** — at V = 0 its 0.75 R blade angle (~20°+) is far past stall, so **static thrust and climb collapse** (the opposite problem to the 28 × 10, which is great for take-off but caps ~107 km/h). One fixed prop cannot be optimal for both. Options, cheapest first:
+
+1. **Compromise fixed prop ≈ 28 × 16–18:** take-off acceptable, cruise η_p ~0.80–0.84 (a few % range penalty vs optimum). Lowest cost.
+2. **Two interchangeable props:** 28 × 10 for take-off/training, 28 × 24 for cruise/range sorties.
+3. **Variable-pitch / constant-speed prop:** fine pitch for take-off, coarse for cruise — best of both, lets the engine hold its best-BSFC rpm at every speed (≈ +5–10 % range plus strong climb), at higher cost/complexity/weight. Best if range *and* field performance both matter.
+
+**Bottom line:** to cruise 160 km/h efficiently, fit roughly a **28 × 24 prop and run ≈ 5000 rpm** → η_p ≈ 0.88, ~3.4 L/h, ~700 km range. Keep the 28 × 10 only if take-off/climb dominate; use a constant-speed prop if you need both.
