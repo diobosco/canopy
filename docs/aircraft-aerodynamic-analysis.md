@@ -396,3 +396,79 @@ C_D0 = 0.0302, k = 0.0497, drag polar **C_D = 0.0302 + 0.0497·C_L²**, (L/D)max
 
 
 **Net effect vs the placeholder section:** essentially unchanged cruise/range performance (≤3 % on L/D and fuel), a meaningfully **cheaper and lighter wing structure** (deeper spar, lower torsion, smaller tail), and a clear, low-cost upgrade path (flaps) to attack the one real weakness — the high stall speed driven by wing loading.
+
+---
+
+## 10. Head-to-head: NACA 2415 vs NACA 4415
+
+Both are 15 %-thick (equal spar depth, so equal first-order spar cost). They differ only in **camber** (2 % vs 4 %), which drives lift, drag, pitching moment and rigging. The tables below use **one shared fuel calibration** (η = 0.089, anchored to 3.6 L/h at V_nom for 2415) so the columns are directly comparable — unlike §9 where each section was anchored to itself.
+
+### 10.1 Key figures
+
+| Metric | NACA 2415 | NACA 4415 | Who wins |
+|---|---:|---:|:--:|
+| Thickness t/c | 15 % | 15 % | tie (equal spar depth) |
+| Camber | 2 % | 4 % | — |
+| C_D0 (aircraft) | 0.0302 | 0.0310 | **2415** (−2.6 %) |
+| (L/D)max | 12.90 | 12.73 | **2415** |
+| C_L at (L/D)max | 0.78 | 0.79 | ~tie |
+| C_Lmax (3-D, clean) | 1.44 | 1.49 | **4415** (+3.5 %) |
+| Stall @500 m (MTOW) | 61.5 km/h | 60.4 km/h | **4415** (−1 km/h) |
+| Stall @4000 m (MTOW) | 73.4 km/h | 72.2 km/h | **4415** |
+| Cruise drag @V_nom (150 km/h) | 67.1 N | 68.7 N | **2415** (−2.4 %) |
+| Pitching moment C_m,ac | −0.05 | −0.09 | **2415** (≈45 % less) |
+| Wing AoA @V_nom | 0.9° | -0.9° | — (rigging differs) |
+
+### 10.2 What actually separates them
+
+- **Efficiency / range → 2415.** Because both are anchored to the same cruise point, the *fuel* columns look almost identical, but the honest physical metric is **drag**: 2415 carries ~2.5 % less drag at cruise and a higher (L/D)max, so it is genuinely the more economical wing off the anchor point (better at high-speed dash and at best-range loiter). Range and endurance favour 2415, slightly.
+- **Low-speed margin → 4415.** Extra camber buys +0.05 C_Lmax ≈ 1 km/h lower stall and a few-degree-higher usable AoA — marginal in clean config, and **both are eclipsed by flaps** (§9.4), which add ~0.3–0.45 C_Lmax either way.
+- **Structure & trim → 2415, decisively.** Same thickness, but 2415's pitching moment is ~45 % smaller. That means **less wing torsion** (lighter D-box/skins), **less tail download** (smaller, lighter horizontal tail) and **lower trim drag** — all aligned with the cost-effective-structure brief. This is the biggest real difference between the two.
+- **Rigging note.** 4415 flies ~1.8° more nose-down (it even reaches *negative* geometric AoA above ~37 m/s). The wing must be rigged at a **lower incidence** for 4415 than for 2415; getting this wrong adds trim drag. 2415's higher, gentler AoA schedule is more forgiving to set up.
+
+### 10.3 Side-by-side performance (MTOW 50 kg)
+
+**500 m — NACA 2415 vs 4415 side by side**
+
+| V (km/h) | C_D 2415 | C_D 4415 | L/D 2415 | L/D 4415 | Drag 2415 (N) | Drag 4415 (N) | AoA 2415 | AoA 4415 | L/km 2415 | L/km 4415 |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 81 | 0.0644 | 0.0652 | 12.88 | 12.72 | 38.1 | 38.6 | 7.93 | 6.13 | 0.0136 | 0.0138 |
+| 90 | 0.0527 | 0.0535 | 12.76 | 12.57 | 38.4 | 39.0 | 6.04 | 4.24 | 0.0137 | 0.0140 |
+| 99 | 0.0455 | 0.0463 | 12.20 | 11.99 | 40.2 | 40.9 | 4.65 | 2.85 | 0.0144 | 0.0146 |
+| 108 | 0.0410 | 0.0418 | 11.37 | 11.16 | 43.1 | 43.9 | 3.59 | 1.79 | 0.0154 | 0.0157 |
+| 117 | 0.0381 | 0.0389 | 10.45 | 10.23 | 46.9 | 47.9 | 2.76 | 0.96 | 0.0168 | 0.0171 |
+| 126 | 0.0360 | 0.0368 | 9.51 | 9.31 | 51.5 | 52.7 | 2.10 | 0.30 | 0.0184 | 0.0188 |
+| 135 | 0.0346 | 0.0354 | 8.62 | 8.43 | 56.9 | 58.2 | 1.58 | -0.22 | 0.0203 | 0.0208 |
+| 144 | 0.0336 | 0.0344 | 7.81 | 7.63 | 62.8 | 64.3 | 1.14 | -0.66 | 0.0225 | 0.0230 |
+| 153 | 0.0329 | 0.0337 | 7.07 | 6.90 | 69.3 | 71.0 | 0.78 | -1.02 | 0.0248 | 0.0254 |
+| 162 | 0.0323 | 0.0331 | 6.41 | 6.26 | 76.4 | 78.3 | 0.48 | -1.32 | 0.0273 | 0.0280 |
+| 171 | 0.0319 | 0.0327 | 5.83 | 5.69 | 84.1 | 86.2 | 0.23 | -1.57 | 0.0301 | 0.0308 |
+| 180 | 0.0316 | 0.0324 | 5.32 | 5.19 | 92.2 | 94.6 | 0.01 | -1.79 | 0.0330 | 0.0338 |
+
+**4000 m — NACA 2415 vs 4415 side by side**
+
+| V (km/h) | C_D 2415 | C_D 4415 | L/D 2415 | L/D 4415 | Drag 2415 (N) | Drag 4415 (N) | AoA 2415 | AoA 4415 | L/km 2415 | L/km 4415 |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 81 | 0.0997 | 0.1005 | 11.86 | 11.76 | 41.4 | 41.7 | 12.15 | 10.35 | 0.0148 | 0.0149 |
+| 90 | 0.0758 | 0.0766 | 12.63 | 12.50 | 38.8 | 39.2 | 9.46 | 7.66 | 0.0139 | 0.0140 |
+| 99 | 0.0614 | 0.0622 | 12.90 | 12.73 | 38.0 | 38.5 | 7.47 | 5.67 | 0.0136 | 0.0138 |
+| 108 | 0.0522 | 0.0530 | 12.74 | 12.55 | 38.5 | 39.1 | 5.96 | 4.16 | 0.0138 | 0.0140 |
+| 117 | 0.0462 | 0.0470 | 12.27 | 12.06 | 40.0 | 40.6 | 4.78 | 2.98 | 0.0143 | 0.0145 |
+| 126 | 0.0421 | 0.0429 | 11.61 | 11.40 | 42.2 | 43.0 | 3.85 | 2.05 | 0.0151 | 0.0154 |
+| 135 | 0.0392 | 0.0400 | 10.86 | 10.64 | 45.2 | 46.1 | 3.09 | 1.29 | 0.0162 | 0.0165 |
+| 144 | 0.0372 | 0.0380 | 10.07 | 9.86 | 48.7 | 49.8 | 2.48 | 0.68 | 0.0174 | 0.0178 |
+| 153 | 0.0357 | 0.0365 | 9.29 | 9.09 | 52.8 | 53.9 | 1.97 | 0.17 | 0.0189 | 0.0193 |
+| 162 | 0.0345 | 0.0353 | 8.56 | 8.36 | 57.3 | 58.6 | 1.54 | -0.26 | 0.0205 | 0.0210 |
+| 171 | 0.0337 | 0.0345 | 7.87 | 7.69 | 62.3 | 63.8 | 1.18 | -0.62 | 0.0223 | 0.0228 |
+| 180 | 0.0331 | 0.0339 | 7.24 | 7.07 | 67.7 | 69.3 | 0.87 | -0.93 | 0.0242 | 0.0248 |
+
+
+### 10.4 Verdict
+
+| If your priority is… | Choose |
+|---|---|
+| **Cheapest/lightest structure, best cruise economy, easy rigging** (the stated brief) | **NACA 2415** ✅ |
+| Maximum *clean-configuration* low-speed margin, shortest unflapped field | NACA 4415 |
+| Either, with flaps added | the flap dominates → **pick 2415** for the structural/economy edge |
+
+**Recommendation stands: NACA 2415.** The two are within ~2–3 % on every aerodynamic metric, so the tie-breaker is structure and trim — where 2415's ~45 % lower pitching moment yields a lighter tail, less wing torsion and lower trim drag. Take the small clean-config C_Lmax that 4415 offers back (and far more) with simple flaps on the constant-chord wing, at lower structural cost than carrying 4 % camber across the whole span.
