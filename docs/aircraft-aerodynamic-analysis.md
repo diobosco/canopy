@@ -119,6 +119,8 @@ The data sheet is therefore self-consistent once you recognise that **V_min (81 
 Reference condition: **MTOW = 50 kg**, steady level flight (L = W), speed range V_min → V_ne.
 Each table is given for **500 m** and **4000 m**. AoA is geometric wing angle of attack (α₀ = −2°).
 
+![Aircraft performance vs airspeed — Drag, Fuel L/km, Fuel L/h, AoA at 500 m and 4000 m](aircraft-performance-curves.png)
+
 ### 4.1 Drag vs airspeed
 
 **500 m**
@@ -401,7 +403,9 @@ C_D0 = 0.0302, k = 0.0497, drag polar **C_D = 0.0302 + 0.0497·C_L²**, (L/D)max
 
 ## 10. Head-to-head: NACA 2415 vs NACA 4415
 
-Both are 15 %-thick (equal spar depth, so equal first-order spar cost). They differ only in **camber** (2 % vs 4 %), which drives lift, drag, pitching moment and rigging. The tables below use **one shared fuel calibration** (η = 0.089, anchored to 3.6 L/h at V_nom for 2415) so the columns are directly comparable — unlike §9 where each section was anchored to itself.
+Both are 15 %-thick (equal spar depth, so equal first-order spar cost). They differ only in **camber** (2 % vs 4 %), which drives lift, drag, pitching moment and rigging.
+
+![NACA 2415 vs 4415 geometry — both 15% thick, differing camber](aircraft-airfoil-geometry.png) The tables below use **one shared fuel calibration** (η = 0.089, anchored to 3.6 L/h at V_nom for 2415) so the columns are directly comparable — unlike §9 where each section was anchored to itself.
 
 ### 10.1 Key figures
 
