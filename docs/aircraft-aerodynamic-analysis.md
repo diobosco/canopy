@@ -619,3 +619,70 @@ The small wing barely raises *top* speed (that's limited by engine power, not wi
 - **No real top-speed gain** — the engine already caps ~200 km/h with the big wing; the small wing mainly buys *efficiency at speed*, not a higher V_max.
 
 **Bottom line:** halving the wing is worthwhile **only if the mission is fast cruise** (≈180 km/h). Then it extends fast-cruise range ~18 % (500 m) and meets 500 km with reserve at the V_ne limit. If low-speed handling, short fields or cheap structure matter, keep the 2 m² wing — it already does 600 km at 150 km/h.
+
+---
+
+## 13. Recalculation — actual geometry: 2 m span × 0.5 m chord (AR 4), V_ne 240 km/h
+
+This supersedes §12's assumption. The wing is **shortened to 2 m span, same 0.5 m chord → S = 1 m², aspect ratio = 4** (not 16). V_ne is raised to **240 km/h**. Same MTOW 50 kg, DLE-120, 15 L, NACA 2415, η = 0.090.
+
+> **The catch with low aspect ratio:** induced drag = C_L²/(π·e·AR). Halving the *span* (not the chord) quarters... no — it **halves AR to 4**, which **doubles the induced-drag factor** to k = 0.099 (was 0.050). The result is a steep loss of L/D.
+
+### 13.1 Recalculated aerodynamics
+
+| Quantity | Original (b 4 m, AR 8) | **This case (b 2 m, AR 4)** |
+|---|---:|---:|
+| Wing area / loading | 2 m² / 25 kg/m² | **1 m² / 50 kg/m²** |
+| Aspect ratio | 8 | **4** |
+| Induced factor k = 1/(π·e·AR) | 0.050 | **0.099** |
+| C_D0 (ref new S) | 0.029 | 0.048 |
+| **(L/D)max** | 13.1 | **7.3** ⬇ |
+| Speed @ (L/D)max | 84 km/h | **125 km/h** |
+| Stall speed @500 m | 65 km/h | **88 km/h** |
+| Stall speed @4000 m | 78 km/h | **105 km/h** |
+| **Max speed (engine-power limited) @500 m** | ~198 km/h | **~205 km/h** |
+| Max speed @4000 m | — | **~194 km/h** |
+
+### 13.2 V_ne 240 km/h is not reachable — the engine is the limit
+
+Raising the structural V_ne to 240 km/h does **not** make the aircraft faster: the DLE-120 caps level flight at **~205 km/h at 500 m (~194 km/h at 4000 m)**. To actually fly 240 km/h (66.7 m/s) the aircraft would need ≈11 kW of *thrust* power; only ~5.9 kW is available. **The new V_ne is academic — you are power-limited ~35 km/h below it.** (Reaching 240 km/h would need roughly double the installed power, e.g. a ~24 hp engine.)
+
+### 13.3 Performance vs airspeed (500 m, MTOW 50 kg)
+
+| V (km/h) | C_L | L/D | Drag (N) | Fuel (L/h) | Fuel (L/km) | Range on 15 L (km) |
+|---:|---:|---:|---:|---:|---:|---:|
+| 100 | 1.089 | 6.58 | 74.5 | 2.65 | 0.0265 | 566 |
+| 120 | 0.756 | 7.24 | 67.7 | 2.89 | 0.0241 | 623 |
+| **130** | 0.644 | **7.25** | 67.6 | 3.13 | **0.0240** | **624 (best range)** |
+| 150 | 0.484 | 6.83 | 71.8 | 3.83 | 0.0255 | 588 |
+| 170 | 0.377 | 6.11 | 80.3 | 4.85 | 0.0285 | 526 |
+| 180 | 0.336 | 5.72 | 85.8 | 5.49 | 0.0305 | 492 |
+| 200 | 0.272 | 4.96 | 98.9 | 7.03 | 0.0352 | 426 |
+| 205 (V_max) | 0.259 | 4.78 | 103 | 7.5 | 0.0366 | 410 |
+| 210–240 | — | — | — | — | — | **unreachable (no power)** |
+
+### 13.4 The 500 km mission
+
+| Cruise plan | Speed | Fuel flow | Economy | Fuel for 500 km | Time | Feasible? |
+|---|---:|---:|---:|---:|---:|:--:|
+| Max-range / economy | **130 km/h** | 3.1 L/h | 0.024 L/km | 12.0 L | 3.8 h | ✔ (3 L reserve) |
+| Fast cruise w/ ~10 % reserve | **160 km/h** | 4.3 L/h | 0.027 L/km | 13.5 L | 3.1 h | ✔ |
+| Fastest that still makes 500 km | **178 km/h** | 5.3 L/h | 0.030 L/km | 15.0 L | 2.8 h | ✔ (no reserve) |
+| @ 4000 m, max-range | **150 km/h** | 3.3 L/h | 0.022 L/km | 11.0 L | 3.3 h | ✔ (626 km max) |
+
+**Answers for the 500 km mission (this geometry):**
+- **Best economy:** cruise **130 km/h** → **3.1 L/h (0.024 L/km)**, 500 km in **3.8 h** using **~12 L** (3 L reserve). Max still-air range ≈ **626 km**.
+- **Fast cruise:** **160 km/h** → **4.3 L/h**, 500 km in 3.1 h, ~13.5 L (≈10 % reserve).
+- **Absolute fastest for 500 km:** **178 km/h** → 5.3 L/h, exactly 15 L, no reserve — this is the practical ceiling for the mission, well under the structural V_ne 240 (and under the ~205 km/h power limit).
+
+### 13.5 Trade-off summary
+
+| Aspect | Verdict for 2 m × 0.5 m wing |
+|---|---|
+| **Structure / cost** | ✅ **Best** — short 2 m span + full 0.5 m chord = a short, deep (75 mm) spar with low bending moment: light, cheap, strong; supports the high V_ne structurally. |
+| **Max speed** | ❌ No gain — **power-limited to ~205 km/h**; the 240 km/h V_ne can't be used. |
+| **Efficiency / range** | ❌ **Worst** — low AR cuts (L/D)max to ~7.3; max range falls to ~626 km, fuel burn ~50 % higher than the original wing at the same speed. |
+| **Low-speed handling** | ❌ Stall up to 88 km/h (500 m) / 105 km/h (4000 m); flaps strongly advised. |
+| **500 km mission** | ✔ Achievable: ~130 km/h for economy (12 L) up to ~178 km/h flat-out (15 L). |
+
+**Bottom line:** the short-span wing is the *cheapest and strongest structure* and easily flies 500 km, but it is the *least aerodynamically efficient* option and gives **no real top-speed benefit** — the engine, not the airframe, caps speed at ~205 km/h, so raising V_ne to 240 km/h buys nothing without more power. If you want both speed *and* range, keep aspect ratio high (long span); if you want a cheap, rugged, fast-enough 500 km truck, this wing works.
