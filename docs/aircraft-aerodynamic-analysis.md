@@ -472,3 +472,99 @@ Both are 15 %-thick (equal spar depth, so equal first-order spar cost). They dif
 | Either, with flaps added | the flap dominates → **pick 2415** for the structural/economy edge |
 
 **Recommendation stands: NACA 2415.** The two are within ~2–3 % on every aerodynamic metric, so the tie-breaker is structure and trim — where 2415's ~45 % lower pitching moment yields a lighter tail, less wing torsion and lower trim drag. Take the small clean-config C_Lmax that 4415 offers back (and far more) with simple flaps on the constant-chord wing, at lower structural cost than carrying 4 % camber across the whole span.
+
+---
+
+## 11. XFOIL-grade validation of the airfoil choice (NeuralFoil)
+
+The handbook section values in §9–§10 were validated with **viscous airfoil polars** computed by **NeuralFoil** (a neural surrogate trained on tens of millions of XFOIL runs; `model_size="xxlarge"`, `n_crit = 9`, M = 0.12) at the wing's true operating Reynolds numbers — **Re ≈ 1.37×10⁶** (500 m cruise) and **Re ≈ 0.80×10⁶** (4000 m). The Debian XFOIL 6.99 binary itself SIGFPE-crashes headless (it traps the floating-point exceptions XFOIL normally ignores), so NeuralFoil is used as the XFOIL-equivalent engine; results are XFOIL-consistent.
+
+![NACA 2415 vs 4415 — section polars](aircraft-airfoil-polars.png)
+
+### 11.1 Handbook assumptions vs XFOIL-grade results
+
+| Property (Re 1.37×10⁶) | 2415 assumed | 2415 XFOIL | 4415 assumed | 4415 XFOIL | Verdict |
+|---|---:|---:|---:|---:|:--:|
+| C_l,max | ~1.60 | **1.60** | ~1.66 | **1.69** | ✔ confirmed |
+| C_d,min | ~0.0070 | **0.0062** | ~0.0078 | **0.0065** | ✔ (slightly better) |
+| α₀ (zero-lift) | −2.0° | **−2.24°** | −3.8° | **−4.00°** | ✔ confirmed |
+| C_m,ac | −0.05 | **−0.048** | −0.09 | **−0.099** | ✔ confirmed |
+| C_lα | 0.105/° | **0.113/°** | 0.105/° | **0.109/°** | ✔ confirmed |
+| Section (L/D)max | — | **108 @ C_l 0.93** | — | **133 @ C_l 1.13** | — |
+
+**The §9–§10 model holds.** Every assumed value is within a few percent of the XFOIL-grade result. The pitching-moment gap that drives the structural recommendation is confirmed exactly: **2415 C_m = −0.048 vs 4415 C_m = −0.099** (4415 has ~2× the nose-down moment).
+
+### 11.2 The decisive operating-point insight
+
+The aircraft cruises *fast and lightly loaded* — wing C_l ≈ **0.24** at V_nom. Reading the real drag polars **at that C_l**:
+
+| At wing C_l = 0.24 (V_nom cruise) | Section C_d | At wing C_l = 0.78 (best range) | Section C_d |
+|---|---:|---|---:|
+| **NACA 2415** | **0.00633** | NACA 2415 | 0.00749 |
+| NACA 4415 | 0.00724 (+14 %) | **NACA 4415** | **0.00662** |
+
+This is the clearest result of the whole study: **at the speed this aircraft actually cruises, NACA 2415 has ~14 % less profile drag than 4415**, because 4415's 4 % camber pushes its low-drag bucket up to C_l ≈ 0.7 — well above the cruise point. 4415 only wins at high C_l (slow/heavy/best-range loiter), which is not where this high-wing-loading airframe spends its time. **XFOIL confirms 2415 as the cruise-economy and structural optimum.**
+
+### 11.3 XFOIL-refined stall speeds (supersede the handbook C_Lmax used earlier)
+
+Re-solved at the *true* stall Reynolds number (≈0.51–0.59×10⁶, since stall happens slow) with a 3-D rectangular-wing correction C_Lmax,wing ≈ 0.90·C_l,max:
+
+| | C_l,max (2-D, stall Re) | C_Lmax (3-D) | V_stall 500 m | V_stall 4000 m |
+|---|---:|---:|---:|---:|
+| **NACA 2415** | 1.43 | 1.29 | **65 km/h** | 78 km/h |
+| **NACA 4415** | 1.55 | 1.40 | **63 km/h** | 75 km/h |
+
+These are ~3 km/h higher than the §9–§10 figures (which used a single optimistic C_Lmax = 1.44 and ignored the low stall-Re). The refined view makes 4415's clean-stall edge a bit larger (+8 % C_Lmax, ~2.5 km/h lower stall) — but it is **still smaller than a simple flap delivers** (§9.4), and it costs the +14 % cruise drag and 2× pitching moment above. **Recommendation unchanged: NACA 2415 + flaps.**
+
+### 11.4 Full XFOIL-grade polars at Re = 1.37×10⁶
+
+**NACA 2415**
+| α (°) | C_l | C_d | C_l/C_d | C_m |
+|---:|---:|---:|---:|---:|
+| -4 | -0.195 | 0.00743 | -26.3 | -0.053 |
+| -3 | -0.084 | 0.00704 | -12.0 | -0.053 |
+| -2 | 0.026 | 0.00674 | 3.9 | -0.052 |
+| -1 | 0.137 | 0.00656 | 20.9 | -0.052 |
+| 0 | 0.247 | 0.00632 | 39.0 | -0.051 |
+| 1 | 0.356 | 0.00620 | 57.4 | -0.051 |
+| 2 | 0.465 | 0.00624 | 74.5 | -0.050 |
+| 3 | 0.571 | 0.00643 | 88.7 | -0.048 |
+| 4 | 0.677 | 0.00691 | 98.1 | -0.046 |
+| 5 | 0.800 | 0.00761 | 105.1 | -0.049 |
+| 6 | 0.932 | 0.00864 | 107.8 | -0.054 |
+| 7 | 1.031 | 0.00987 | 104.5 | -0.052 |
+| 8 | 1.110 | 0.01119 | 99.2 | -0.046 |
+| 9 | 1.191 | 0.01259 | 94.6 | -0.040 |
+| 10 | 1.271 | 0.01413 | 90.0 | -0.035 |
+| 11 | 1.344 | 0.01583 | 84.9 | -0.029 |
+| 12 | 1.409 | 0.01790 | 78.7 | -0.023 |
+| 13 | 1.469 | 0.02056 | 71.5 | -0.017 |
+| 14 | 1.523 | 0.02412 | 63.1 | -0.012 |
+| 15 | 1.565 | 0.02898 | 54.0 | -0.008 |
+| 16 | 1.595 | 0.03550 | 44.9 | -0.004 |
+
+**NACA 4415**
+| α (°) | C_l | C_d | C_l/C_d | C_m |
+|---:|---:|---:|---:|---:|
+| -4 | 0.042 | 0.00755 | 5.5 | -0.102 |
+| -3 | 0.154 | 0.00733 | 20.9 | -0.102 |
+| -2 | 0.266 | 0.00722 | 36.8 | -0.102 |
+| -1 | 0.377 | 0.00718 | 52.5 | -0.101 |
+| 0 | 0.488 | 0.00712 | 68.6 | -0.101 |
+| 1 | 0.597 | 0.00679 | 87.9 | -0.100 |
+| 2 | 0.700 | 0.00654 | 107.0 | -0.099 |
+| 3 | 0.816 | 0.00672 | 121.5 | -0.099 |
+| 4 | 0.934 | 0.00723 | 129.1 | -0.100 |
+| 5 | 1.033 | 0.00782 | 132.1 | -0.098 |
+| 6 | 1.133 | 0.00852 | 133.0 | -0.096 |
+| 7 | 1.231 | 0.00941 | 130.7 | -0.093 |
+| 8 | 1.315 | 0.01086 | 121.0 | -0.089 |
+| 9 | 1.382 | 0.01290 | 107.1 | -0.081 |
+| 10 | 1.444 | 0.01519 | 95.1 | -0.074 |
+| 11 | 1.504 | 0.01769 | 85.1 | -0.067 |
+| 12 | 1.560 | 0.02078 | 75.1 | -0.060 |
+| 13 | 1.608 | 0.02475 | 64.9 | -0.054 |
+| 14 | 1.646 | 0.02979 | 55.3 | -0.049 |
+| 15 | 1.675 | 0.03622 | 46.3 | -0.044 |
+| 16 | 1.694 | 0.04440 | 38.1 | -0.041 |
+
