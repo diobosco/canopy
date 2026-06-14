@@ -572,3 +572,50 @@ These are ~3 km/h higher than the §9–§10 figures (which used a single optimi
 | 15 | 1.675 | 0.03622 | 46.3 | -0.044 |
 | 16 | 1.694 | 0.04440 | 38.1 | -0.041 |
 
+
+---
+
+## 12. Scenario study — half-size wing (1 m²) for higher-speed cruise
+
+**Question:** if wing area is cut from 2 m² to **1 m²** and we fly faster, what cruise speed, fuel burn and range result for a **500 km** mission? (Same MTOW 50 kg, same DLE-120, same 15 L fuel, same NACA 2415, same propulsion efficiency η = 0.090.)
+
+Halving the wing **doubles wing loading to 50 kg/m²**. Because you didn't specify *how* the area is removed, two cases are modelled:
+
+| Variant | How area is removed | Span | Chord | AR | e | C_D0 (ref new S) | (L/D)max |
+|---|---|---:|---:|---:|---:|---:|---:|
+| **B1 (recommended)** | keep 4 m span, narrow the chord | 4.00 m | 0.25 m | 16 | 0.66 | 0.049 | **13.0** |
+| B2 | scale the whole wing down | 2.83 m | 0.354 m | 8 | 0.80 | 0.048 | 10.2 |
+
+**B1 keeps (L/D)max ≈ 13** because the high aspect ratio offsets the higher C_D0; **B2 loses ~22 %** of L/D (same AR, but the fixed fuselage/tail drag is now spread over half the reference area). **If you shrink the wing, keep the span.** All numbers below are for B1.
+
+### 12.1 What changes
+
+| | Original (S = 2) | B1 (S = 1) |
+|---|---:|---:|
+| Wing loading | 25 kg/m² | **50 kg/m²** |
+| Stall speed @500 m (MTOW) | 65 km/h | **87 km/h** |
+| Stall speed @4000 m | 78 km/h | **104 km/h** |
+| Parasite drag *area* (f = C_D0·S) | 0.060 m² | **0.049 m² (−18 %)** |
+| Max speed (power-limited) @500 m | ~198 km/h | ~210 km/h |
+| Drag @180 km/h, 500 m | 89.6 N | **76.9 N** |
+| **Range @180 km/h, 500 m (15 L)** | 466 km | **548 km (+18 %)** |
+
+The small wing barely raises *top* speed (that's limited by engine power, not wing), but at any given fast cruise it has **less drag → less fuel → more range**. That is the real payoff.
+
+### 12.2 The 500 km mission (B1)
+
+| Cruise | Speed | Fuel flow | Economy | Range on 15 L | Fuel for 500 km | Time for 500 km |
+|---|---:|---:|---:|---:|---:|---:|
+| To hit *exactly* 500 km | **190 km/h** | 5.7 L/h | 0.030 L/km | 500 km | 15.0 L | 2.6 h |
+| **At V_ne = 180 km/h (recommended)** | **180 km/h** | **4.9 L/h** | **0.027 L/km** | **548 km** | **13.7 L** | **2.8 h** |
+| Same at **4000 m** | 180 km/h | **3.7 L/h** | 0.020 L/km | **733 km** | 10.0 L | 2.8 h |
+
+**Answer:** with the 1 m² wing, 500 km is comfortably met **cruising at the V_ne limit of 180 km/h** — giving ~548 km of still-air range at 500 m (≈733 km at 4000 m), burning **~4.9 L/h (≈0.027 L/km)** and using only ~13.7 L of the 15 L for the 500 km leg (~2.8 h). Hitting exactly 500 km would mean cruising ~190 km/h, which **exceeds V_ne — so V_ne, not range, is the limit**: you have range to spare.
+
+### 12.3 Costs of the small wing (important)
+
+- **Stall/approach/take-off speeds jump ~35 %** (stall 65 → 87 km/h at 500 m, 104 km/h at 4000 m). Take-off and landing distances grow substantially; V_min rises to ~115 km/h. **Flaps become close to mandatory.**
+- **Structure:** a 0.25 m chord at 50 kg/m² gives a shallow spar (≈37 mm deep even at 15 % t/c) carrying double the load — a **heavier/costlier spar**, which runs *against* the earlier cost-effective-structure goal. This is the price of speed.
+- **No real top-speed gain** — the engine already caps ~200 km/h with the big wing; the small wing mainly buys *efficiency at speed*, not a higher V_max.
+
+**Bottom line:** halving the wing is worthwhile **only if the mission is fast cruise** (≈180 km/h). Then it extends fast-cruise range ~18 % (500 m) and meets 500 km with reserve at the V_ne limit. If low-speed handling, short fields or cheap structure matter, keep the 2 m² wing — it already does 600 km at 150 km/h.
